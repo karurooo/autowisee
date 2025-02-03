@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { Button } from '~/components/buttons/PrimaryButton';
 import { Container } from '~/components/shared/Container';
 import { Checkbox } from '~/components/checkbox';
-import { useSignupMutation } from '~/mutations/signup';
+import { useSignupMutation } from '~/mutations/auth/signup'; // Import the useSignupMutation hook
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, SignupFormData } from '~/schema/authSchema';
@@ -49,6 +49,7 @@ export default function Signup() {
         setErrorMessage(mutationError.message);
       }
       setIsBottomSheetVisible(true);
+      prevErrorMessageRef.current = mutationError.message;
     }
   }, [mutationError]);
 

@@ -37,7 +37,6 @@ const RadioButton: React.FC<RadioProps> = ({
         </View>
         <Text className="ml-2 text-lg">{label}</Text>
       </Pressable>
-      {error && <Text className={`mt-1 text-sm text-error ${errorClassName}`}>{error}</Text>}
     </View>
   );
 };

@@ -28,6 +28,7 @@ const RoleSelector: React.FC<RoleSelectorProps> = ({ control, error }) => {
               />
             ))}
           </View>
+          {error && <Text className={`$ mt-1 text-sm text-error`}>{error}</Text>}
         </View>
       )}
     />
