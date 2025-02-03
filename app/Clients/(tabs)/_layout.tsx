@@ -1,7 +1,7 @@
 import { Link, Tabs } from 'expo-router';
 
-import { HeaderButton } from '~/components/HeaderButton';
-import { TabBarIcon } from '~/components/TabBarIcon';
+import { HeaderButton } from '~/components/shared/HeaderButton';
+import { TabBarIcon } from '~/components/shared/TabBarIcon';
 
 export default function TabLayout() {
   return (

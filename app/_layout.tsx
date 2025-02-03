@@ -1,9 +1,11 @@
 import '../global.css';
+import 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
@@ -24,14 +26,16 @@ export default function RootLayout() {
   }
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-        <StatusBar style="auto" />
-      </QueryClientProvider>
+      <GestureHandlerRootView>
+        <QueryClientProvider client={queryClient}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          />
+          <StatusBar style="auto" />
+        </QueryClientProvider>
+      </GestureHandlerRootView>
     </>
   );
 }
