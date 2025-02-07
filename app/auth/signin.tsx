@@ -6,13 +6,14 @@ import { Checkbox } from '~/components/checkbox';
 import { useSignupMutation } from '~/mutations/auth/signup'; // Import the useSignupMutation hook
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema, SignupFormData } from '~/schema/authSchema';
+import { signinSchema, SigninFormData } from '~/schema/authSchema';
 import BottomSheet from '~/components/bottom_sheet';
 import FormField from '~/components/form_fields/FormFields'; // Import the reusable FormField
 import RoleSelector from '~/components/form_fields/RoleSelector'; // Import the reusable RoleSelector
+import { useSigninMutation } from '~/mutations/auth/signin';
 import { router } from 'expo-router';
 
-export default function Signup() {
+export default function Signin() {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const closeBottomSheet = useCallback(() => {
@@ -24,20 +25,15 @@ export default function Signup() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  } = useForm<SigninFormData>({
+    resolver: zodResolver(signinSchema),
     defaultValues: {
       email: '',
       password: '',
-      confirm_password: '',
-      first_name: '',
-      last_name: '',
-      agree_to_terms: false,
-      role: undefined,
     },
   });
 
-  const { mutate, isPending, error: mutationError } = useSignupMutation();
+  const { mutate, isPending, error: mutationError } = useSigninMutation();
   const prevErrorMessageRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -54,13 +50,10 @@ export default function Signup() {
     }
   }, [mutationError]);
 
-  const onSubmit = (data: SignupFormData) => {
+  const onSubmit = (data: SigninFormData) => {
     mutate({
       email: data.email,
       password: data.password,
-      firstName: data.first_name,
-      lastName: data.last_name,
-      role: data.role,
     });
     console.log('form data: ', data);
   };
@@ -76,34 +69,8 @@ export default function Signup() {
           </Text>
         </View>
         <View className="my-4">
-          {/* Role Selector */}
-          <RoleSelector control={control} error={errors.role?.message} />
-
-          {/* Form Fields */}
-          <FormField control={control} name="first_name" label="First Name" />
-          <FormField control={control} name="last_name" label="Last Name" />
           <FormField control={control} name="email" label="Email" keyboardType="email-address" />
           <FormField control={control} name="password" label="Password" isPassword />
-          <FormField
-            control={control}
-            name="confirm_password"
-            label="Confirm Password"
-            isPassword
-          />
-
-          {/* Agree to Terms Checkbox */}
-          <Controller
-            control={control}
-            name="agree_to_terms"
-            render={({ field: { onChange, value } }) => (
-              <Checkbox
-                isChecked={value}
-                onToggle={() => onChange(!value)}
-                label="By signing up, you agree to our Terms of Service and Privacy Policy"
-                error={errors.agree_to_terms?.message}
-              />
-            )}
-          />
 
           {/* Submit Button */}
           <Button
@@ -112,12 +79,12 @@ export default function Signup() {
             onPress={handleSubmit(onSubmit)}
             disabled={isPending}
           />
-          <View className="flex-row justify-center gap-1">
+          <View className="my-2 flex-row justify-center gap-1">
             <Text className="font-Poppins text-center text-text_primary">
-              Already have an account?
+              Don't have an account?
             </Text>
-            <Pressable onPress={() => router.push('/auth/signin')}>
-              <Text className="font-Poppins text-center font-medium text-text_primary">Signin</Text>
+            <Pressable onPress={() => router.push('/auth/signup')}>
+              <Text className="font-Poppins text-center font-medium text-text_primary">Signup</Text>
             </Pressable>
           </View>
         </View>

@@ -6,6 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'expo-dev-client';
+import * as SecureStore from 'expo-secure-store';
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({

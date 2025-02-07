@@ -7,7 +7,7 @@ export const useVerificationMutation = () => {
     mutationFn: verificationOtp,
     onSuccess: (data) => {
       console.log('OTP verified successfully:', data); // Debugging log
-      router.push('/auth/signup'); // Navigate to the next screen
+      router.push('/auth/signin'); // Navigate to the next screen
     },
     onError: (error: any) => {
       console.error('Verification failed:', error); // Debugging log

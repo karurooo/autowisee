@@ -1,4 +1,4 @@
-import { VerificationFormData } from '~/schema/authSchema';
+import { SigninFormData, VerificationFormData } from '~/schema/authSchema';
 import { supabase } from '~/services/supabase';
 
 interface SignupData {
@@ -60,6 +60,24 @@ export const verificationOtp = async ({ email, otp }: VerifyOtpInput) => {
     console.log('OTP verified successfully'); // Debugging log
   } catch (error) {
     console.error('Verification error:', error); // Debugging log
+    throw error;
+  }
+};
+
+export const signin = async ({ email, password }: SigninFormData) => {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Signin error:', error);
     throw error;
   }
 };
