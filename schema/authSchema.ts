@@ -21,6 +21,7 @@ export const signupSchema = z
       message: 'Select a valid role',
     }),
   })
+
   .superRefine(({ confirm_password, password }, ctx) => {
     if (confirm_password !== password) {
       ctx.addIssue({
@@ -37,10 +38,12 @@ export const signinSchema = z.object({
 });
 
 export const verificationSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  otp: z.string().min(6, 'OTP must be 6 digits').max(6, 'OTP must be 6 digits'),
+  otp: z
+    .string()
+    .min(6, 'OTP must be 6 digits')
+    .max(6, 'OTP must be 6 digits')
+    .refine((val) => /^\d+$/.test(val), 'OTP must contain only numbers'),
 });
-
 // Type inference
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type SigninFormData = z.infer<typeof signinSchema>;

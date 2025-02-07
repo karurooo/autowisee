@@ -1,5 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { VerificationFormData } from '~/schema/authSchema';
 import { supabase } from '~/services/supabase';
 
 interface SignupData {
@@ -9,9 +8,13 @@ interface SignupData {
   lastName: string;
   role: string;
 }
-const signup = async ({ email, password, firstName, lastName, role }: SignupData) => {
+
+interface VerifyOtpInput {
+  email: string;
+  otp: string;
+}
+export const signup = async ({ email, password, firstName, lastName, role }: SignupData) => {
   try {
-    // Step 1: Create the user in the auth table
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -19,6 +22,7 @@ const signup = async ({ email, password, firstName, lastName, role }: SignupData
         data: {
           first_name: firstName,
           last_name: lastName,
+          role: role,
         },
       },
     });
@@ -31,12 +35,31 @@ const signup = async ({ email, password, firstName, lastName, role }: SignupData
       throw new Error('User ID is missing. Unable to proceed.');
     }
 
-    // No need to manually insert into the users table if using a trigger
     return { success: true, user: authData.user };
   } catch (error) {
     console.error('Signup error:', error);
     throw error;
   }
 };
+export const verificationOtp = async ({ email, otp }: VerifyOtpInput) => {
+  try {
+    console.log('Verifying OTP with:', { email, otp }); // Debugging log
 
-export { signup };
+    // 1. Verify OTP
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email,
+      token: otp,
+      type: 'signup', // Ensure this matches the type used when sending the OTP
+    });
+
+    if (verifyError) {
+      console.error('Supabase OTP verification error:', verifyError); // Debugging log
+      throw new Error(verifyError.message || 'Invalid OTP. Please try again.');
+    }
+
+    console.log('OTP verified successfully'); // Debugging log
+  } catch (error) {
+    console.error('Verification error:', error); // Debugging log
+    throw error;
+  }
+};
